@@ -1,11 +1,14 @@
 # batman-car-rental-edu
+**ENGLISH DESCRIPTION:**
+
 An educational application showcasing the use of functions and CRUD operations on CSV files with indices, intentionally avoiding the use of the CSV import module. The application simulates a fictional Batman car rental service.
 
 The application is currently available only in Italian, but it will be translated into English in the near future.
 Despite being in beta, it functions correctly within its scope. The code is still in need of optimization.
 
 
-Descrizione in italiano
+
+**DESCRIZIONE IN ITALIANO**
 
 Applicazione di carattere educativo di un fantomatico autonoleggio di Batman per mostrare l'uso di funzioni e la gestione delle operazioni CRUD su file CSV con gli indici, volutamente senza l'uso di import CSV 
 
