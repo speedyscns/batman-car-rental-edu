@@ -6,6 +6,7 @@ Despite being in beta, it functions correctly within its scope. The code is stil
 
 
 Descrizione in italiano
+
 Applicazione di carattere educativo di un fantomatico autonoleggio di Batman per mostrare l'uso di funzioni e la gestione delle operazioni CRUD su file CSV con gli indici, volutamente senza l'uso di import CSV 
 
 L'applicazione è al momento solo in italiano, prossimamente sarà tradotta anche in inglese.
