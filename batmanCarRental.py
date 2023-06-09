@@ -282,13 +282,7 @@ def modificaPrezzoAuto():
         auto.append(rigaSplit[0].strip())   
     file.close()
     
-    NuovoPrezzoAuto = input("""
-                                
-        -----------------------------------------------------------
-        Ora, inserisci il nuovo prezzo/giorno dell'auto selezionata
-        -----------------------------------------------------------
-        
-        >>> """)
+    
     
     # LETTURA TUTTA LE LINEE e verifica se l'ID auto da modificare è presente tra gli indici delle auto                                     
     if IDAutoPrezzoDaModificareo in auto and len(auto) > 0:
@@ -298,6 +292,15 @@ def modificaPrezzoAuto():
         
         file = open(pathAuto, "w")
         nomeAutoDaModificare = ""
+        
+        # input da inserire dentro la IF successiva accertato che ID auto da modificare è presente
+        NuovoPrezzoAuto = input(""" 
+                                
+        -----------------------------------------------------------
+        Ora, inserisci il nuovo prezzo/giorno dell'auto selezionata
+        -----------------------------------------------------------
+        
+        >>> """)
     
         for riga in linee:
             rigaSplit = riga.strip().split(":")
@@ -341,12 +344,7 @@ def inserimentoAuto():
         Inserisci il nome della nuova auto noleggiabile
         
         >>> """)
-    inserimentoPrezzoAuto = input(f"""
-        -----------------------------------------------------------------
-        Inserisci il prezzo/giorno a noleggio della {inserimentoNomeAuto}
-        -----------------------------------------------------------------
-        
-        >>> """)
+    
             
     file = letturaCSV(Path=pathAuto)
 
@@ -363,9 +361,18 @@ def inserimentoAuto():
         ----------------------------------------------------
             """)
     else: # INSERIMENTO (semi-automatico) INDICE USANDO COME RIFERIMENTO ULTIMO INDICE
+        
+        
+        
         if len(auto) > 0: # Se la lunghezza stringhe > 0
             ultimaRiga = auto[-1].split(":") # LEGGE L'indice dell'ultima riga
             ultimoNumeroIndice = int(ultimaRiga[0]) #Convertire stringa con intero
+            inserimentoPrezzoAuto = input(f"""
+        -----------------------------------------------------------------
+        Inserisci il prezzo/giorno a noleggio della {inserimentoNomeAuto}
+        -----------------------------------------------------------------
+        
+        >>> """)
 
         else:
             ultimoNumeroIndice = 1
@@ -384,6 +391,7 @@ def inserimentoAuto():
 def adminON(login):
     while True:           
         scelta = input(f"""
+        --------------------------------------------------               
         {login}, puoi eseguiure le seguenti operazioni:
         -------------------------------------------------- 
         1. Inserire una nuova auto disponibile al noleggio
@@ -468,7 +476,7 @@ def ordinamentoAutoperPrezzoCrescente(auto):
     return autoOrdinata
 
 def ordinamentoAutoperPrezzoDecrescente(auto):
-    autoOrdinata = sorted(auto, key=lambda singolaAuto: int(singolaAuto[2]) * -1)
+    autoOrdinata = sorted(auto, key=lambda singolaAuto: int(singolaAuto[2]), reverse=True) #oppure ) * -1
     return autoOrdinata
 
 def ordinamentoAuto(tipoOrdinamento):
@@ -495,8 +503,8 @@ def ordinamentoAuto(tipoOrdinamento):
 
     auto = tipoOrdinamento(auto)
     
-    for riga in auto:
-        print("        ", ":".join(riga))
+    for riga in auto: 
+        print("        ", ":".join(riga)) # eliminazione spazi
     
     if len(auto) < 1:
         print("""
@@ -504,9 +512,10 @@ def ordinamentoAuto(tipoOrdinamento):
         Non ci sono auto disponibili
         ----------------------------
                 """)       
+
+    file.close()
     
-    # CODICE PER STAMPA CONTENUTO CSV NON ORDINATO tra '''
-    '''    
+def sempliceAperturaCSV():
     auto = []  # dichiarazione della variabile auto
 
     print("""
@@ -522,22 +531,24 @@ def ordinamentoAuto(tipoOrdinamento):
     # TUTTI I COMMENTI SU FUNZIONE restituisciAuto()
     for riga in file:
         rigaSplit = riga.strip().split(":")
-        auto.append(rigaSplit[0].strip())  # Aggiungi l'indice dell'auto alla lista auto
         
         if mostraAncheBatmobile(rigaSplit) and batmobile:
-            print("        ", riga)
+            auto.append(rigaSplit)  # Aggiunge riga alla lista con ciclo for
         elif nascondiBatmobile(rigaSplit):
-            print("        ", riga)
-        elif len(rigaSplit) < 1:
-            print("""
+            auto.append(rigaSplit)  # Aggiunge riga alla lista con ciclo for
+
+    for riga in auto:
+        print("        ", ":".join(riga)) # eliminazione spazi
+    
+    if len(auto) < 1:
+        print("""
         ----------------------------
         Non ci sono auto disponibili
         ----------------------------
-                """)
-'''
+                """)       
 
     file.close()
-
+    
 def sceltaOrdinamentoAuto(login):
 
     while True:
@@ -547,6 +558,7 @@ def sceltaOrdinamentoAuto(login):
         1. In ordine alfabetico
         2. In ordine di prezzo/giorno crescente
         3. In ordine di prezzo/giorno decrescente
+        4. Apertura ordine CSV
 
         Premi 0 per tornare al menù precedente
 
@@ -561,6 +573,9 @@ def sceltaOrdinamentoAuto(login):
         elif selezione == "3":
             ordinamentoAuto(tipoOrdinamento = ordinamentoAutoperPrezzoDecrescente)
             menuAccount(login)
+        elif selezione == "4":
+            sempliceAperturaCSV()
+            menuAccount(login)    
         elif selezione == "0":
             break
         else:
@@ -807,9 +822,26 @@ generazioneCSVDefault()
 main()
 
 
-# parti interessanti:
-# 1. automatizzazione creazione csv;
-# 2. funzione per la lettura csv per più file su unica funzione (base per implementazione altre funzioni con codice ripetuto)
-# 3. Ciclo FOR con IF ELSE per smistare condizioni e scrittura su file 
-#    nelle funzioni noleggiaAuto(), restituisciAuto(), inserimentoAuto() e rimozioneAuto() 
-#    meccanismo usato, in principio, su nascondiBatmobile()
+'''
+# possibile soluzione definire cartella CSV
+
+import os
+import tkinter as tk
+from tkinter import filedialog
+
+def select_directory():
+    root = tk.Tk()
+    root.withdraw()
+    directory = filedialog.askdirectory(initialdir=os.getcwd(), title="Seleziona una cartella")
+    return directory
+
+# Utilizzo dell'interfaccia per selezionare la cartella
+selected_directory = select_directory()
+
+# Verifica se è stata selezionata una cartella
+if selected_directory:
+    # Utilizza la cartella selezionata come percorso di salvataggio per i file CSV
+    percorsoCartellaFilePY = selected_directory
+    print("Cartella selezionata:", percorsoCartellaFilePY)
+else:
+    print("Nessuna cartella selezionata")'''
